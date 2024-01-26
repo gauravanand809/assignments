@@ -1,4 +1,15 @@
-## Create a counter in JavaScript
+let count = 0;
 
-We have already covered this in the second lesson, but as an easy recap try to code a counter in Javascript
-It should go up as time goes by in intervals of 1 second
+// Function to update and display the counter
+function updateCounter() {
+  console.log("Counter:", count);
+  count++;
+
+  // Uncomment the following line if you want the counter to stop after a certain number of iterations (e.g., 10 iterations)
+  // if (count === 10) clearInterval(counterInterval);
+}
+
+// Use a for loop to simulate the counter
+for (let i = 0; i < 10; i++) {
+  setTimeout(updateCounter, i * 1000);
+}
