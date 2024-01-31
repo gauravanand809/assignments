@@ -39,6 +39,18 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
+  class Todo {
+    constructor(todo_given) {
+      this.todo = todo_given;
+    }
+  }
+  
+  let demoTodo = new Todo("This is for demo purpose only");
+  let todos = [];
+  todos[0] = {
+    Todo: demoTodo.todo
+  };
+  
   const express = require('express');
   const bodyParser = require('body-parser');
   
@@ -46,4 +58,21 @@
   
   app.use(bodyParser.json());
   
-  module.exports = app;
+  app.get('/todos', function(req, res) {
+    let todoItems = []; 
+    for (let i = 0; i < todos.length; i++) {
+      todoItems[i] = todos[i].Todo; 
+    }
+    res.status(200).json(todoItems);
+  });
+
+  app.get('/todos/:id',function(req,res){
+      let todoNumber=req.body.todoNumbers;
+      res.status(200).json(todos[todoNumber]);
+  })
+  
+
+  app.listen(3000, function() {
+    console.log("Server running properly");
+  });
+  
