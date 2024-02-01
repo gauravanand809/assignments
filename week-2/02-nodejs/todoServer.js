@@ -40,16 +40,17 @@
   Testing the server - run `npm run test-todoServer` command in terminal
  */
   class Todo {
-    constructor(todo_given) {
+    constructor(todo_given,title_given) {
       this.todo = todo_given;
+      this.statusTodo=false;
+      this.title=title_given;
+
     }
   }
   
-  let demoTodo = new Todo("This is for demo purpose only");
+  let demoTodo = new Todo("This is for demo purpose only","Demo Todo");
   let todos = [];
-  todos[0] = {
-    Todo: demoTodo.todo
-  };
+  todos[0] = demoTodo;
   
   const express = require('express');
   const bodyParser = require('body-parser');
@@ -61,7 +62,7 @@
   app.get('/todos', function(req, res) {
     let todoItems = []; 
     for (let i = 0; i < todos.length; i++) {
-      todoItems[i] = todos[i].Todo; 
+      todoItems[i] = todos[i].title; 
     }
     res.status(200).json(todoItems);
   });
@@ -70,7 +71,42 @@
       let todoNumber=req.body.todoNumbers;
       res.status(200).json(todos[todoNumber]);
   })
-  
+  app.post("/todos",function(req,res){
+    let entryTodo=req.body.entryPoint;
+    let newTodo=new Todo(entryTodo.description,entryTodo.title);
+    todos.push(newTodo)
+    res.status(200).json({
+      msg:"done",
+      tokenNumber:todos.length-1
+    })
+  })
+
+  app.put("/todos/:id",function(req,res){
+    let todoDelete=req.body.delete;
+    if(todoDelete.id<=todos.length){
+    delete todos[todoDelete.id]
+      res.status(200).json({msg:"deletion_done"})
+  }
+    res.status(404).json({
+      msg:"todo not found"
+    })
+    
+  })
+
+  app.delete("/todos/:id",function(req,res){
+    let todoUpdate=req.body.changeStatus;
+    for(let i=0;i<todos.length;i++){
+      if (todos[i].title==todoUpdate.title) {
+        todos[i].statusTodo=todoUpdate.completed;
+        res.status(200).json({
+          msg:"Status updated"
+        })
+      }
+    }
+    res.status(404).json({
+      msg:"todo not found"
+    })
+  })
 
   app.listen(3000, function() {
     console.log("Server running properly");
